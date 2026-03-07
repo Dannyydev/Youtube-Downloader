@@ -1,161 +1,203 @@
-# YouTube Downloader - VERSION 2026 FIABLE & OPTIMISÉE
+# YouTube Downloader - MP3 + PLAYLISTS - STABLE 2026
 import os
+import sys
 import subprocess
-import tkinter as tk
-from tkinter import ttk, filedialog, messagebox
 import threading
 import ctypes
-import sys
+import re
+import tkinter as tk
+from tkinter import ttk, filedialog, messagebox
 
-# Détection du dossier de l'exécutable (PyInstaller ou script normal)
+# =========================
+# BASE PATH (PyInstaller OK)
+# =========================
 if getattr(sys, 'frozen', False):
     BASE_PATH = sys._MEIPASS
 else:
     BASE_PATH = os.path.dirname(os.path.abspath(__file__))
 
-# Identifiant d'application Windows (pour la barre des tâches)
-myappid = 'YouTubeDownloader.Danny.2026'
+# =========================
+# WINDOWS APP ID
+# =========================
 try:
-    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
-except AttributeError:
-    pass  # pas sous Windows
+    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(
+        "YouTubeDownloader.Danny.MP3.Playlists.2026"
+    )
+except:
+    pass
 
-# ---------------------------------------
-# Fenêtre principale
-# ---------------------------------------
+# =========================
+# TKINTER WINDOW
+# =========================
 root = tk.Tk()
-root.title("YouTube Downloader 2026")
+root.title("YouTube Downloader — MP3 / Playlists")
+root.geometry("960x700")
+root.minsize(520, 420)
 root.configure(bg="#f0f2f5")
-root.geometry("860x720")
-root.minsize(460, 380)
 
-# Plein écran avec F11 / Échap pour quitter
-root.rowconfigure(0, weight=1)
-root.columnconfigure(0, weight=1)
-
-def toggle_fullscreen(event=None):
-    root.attributes("-fullscreen", not root.attributes("-fullscreen"))
-
-root.bind("<F11>", toggle_fullscreen)
+root.bind("<F11>", lambda e: root.attributes("-fullscreen", not root.attributes("-fullscreen")))
 root.bind("<Escape>", lambda e: root.attributes("-fullscreen", False))
 
-# Style moderne
+# =========================
+# STYLE
+# =========================
 style = ttk.Style()
 style.theme_use("clam")
-style.configure("TProgressbar", thickness=24, background="#27ae60", troughcolor="#ecf0f1")
-style.map("TProgressbar", background=[("active", "#2ecc71")])
+style.configure(
+    "TProgressbar",
+    thickness=26,
+    background="#27ae60",
+    troughcolor="#ecf0f1"
+)
 
-# Frame principale
-main_frame = tk.Frame(root, bg="#f0f2f5")
-main_frame.grid(sticky="nsew", padx=20, pady=20)
-main_frame.columnconfigure(0, weight=1)
+# =========================
+# LAYOUT
+# =========================
+main = tk.Frame(root, bg="#f0f2f5", padx=30, pady=25)
+main.pack(fill="both", expand=True)
+main.columnconfigure(0, weight=1)
 
-for i in range(10):
-    main_frame.rowconfigure(i, weight=1 if i in (2,4,7) else 0)
+# =========================
+# TITLE
+# =========================
+tk.Label(
+    main,
+    text="YouTube Downloader",
+    font=("Segoe UI", 26, "bold"),
+    bg="#f0f2f5",
+    fg="#2c3e50"
+).grid(row=0, column=0, pady=(10, 25), sticky="ew")
 
-# Titre
-tk.Label(main_frame, text="YouTube Downloader", font=("Segoe UI", 28, "bold"),
-         bg="#f0f2f5", fg="#2c3e50").grid(row=0, column=0, pady=(10, 20), sticky="ew")
+# =========================
+# URL INPUT
+# =========================
+tk.Label(
+    main,
+    text="URL YouTube (vidéo ou playlist)",
+    font=("Segoe UI", 12, "bold"),
+    bg="#f0f2f5",
+    fg="#34495e"
+).grid(row=1, column=0, sticky="w")
 
-# URL
-tk.Label(main_frame, text="URL YouTube :", font=("Segoe UI", 12, "bold"),
-         bg="#f0f2f5", fg="#34495e", anchor="w").grid(row=1, column=0, sticky="ew", pady=(0,5))
+url_entry = tk.Text(
+    main,
+    height=3,
+    font=("Segoe UI", 11),
+    wrap="word",
+    relief="flat",
+    highlightthickness=2,
+    highlightbackground="#bdc3c7",
+    highlightcolor="#3498db"
+)
+url_entry.grid(row=2, column=0, sticky="ew", pady=(6, 20))
+url_entry.insert("1.0", "https://www.youtube.com/")
 
-url_entry = tk.Text(main_frame, height=3, font=("Segoe UI", 11),
-                    relief="flat", bd=1, highlightthickness=2, highlightbackground="#bdc3c7",
-                    highlightcolor="#3498db", wrap="word")
-url_entry.grid(row=2, column=0, sticky="ew", pady=(0,15))
-url_entry.insert("1.0", "https://www.youtube.com/watch?v=")
+# =========================
+# INFO
+# =========================
+tk.Label(
+    main,
+    text="MP3 haute qualité • Playlists complètes • Pochette intégrée",
+    font=("Segoe UI", 12, "bold"),
+    bg="#f0f2f5",
+    fg="#34495e"
+).grid(row=3, column=0, pady=(0, 20))
 
-# Format
-tk.Label(main_frame, text="Format :", font=("Segoe UI", 12, "bold"),
-         bg="#f0f2f5", fg="#34495e", anchor="w").grid(row=3, column=0, sticky="ew", pady=(0,5))
+# =========================
+# BUTTON
+# =========================
+download_btn = tk.Button(
+    main,
+    text="TÉLÉCHARGER MP3",
+    bg="#27ae60",
+    fg="white",
+    font=("Segoe UI", 15, "bold"),
+    relief="flat",
+    cursor="hand2",
+    activebackground="#2ecc71",
+    padx=60,
+    pady=14
+)
+download_btn.grid(row=4, column=0, pady=20)
 
-format_var = tk.StringVar(value="mp3")
-format_frame = tk.Frame(main_frame, bg="#f0f2f5")
-format_frame.grid(row=4, column=0, sticky="ew", pady=(0,20))
+# =========================
+# PROGRESS
+# =========================
+percent_label = tk.Label(
+    main,
+    text="0%",
+    font=("Segoe UI", 22, "bold"),
+    bg="#f0f2f5",
+    fg="#2c3e50"
+)
+percent_label.grid(row=5, column=0, pady=(10, 5))
 
-tk.Radiobutton(format_frame, text="MP3 (Audio seulement)", variable=format_var, value="mp3",
-               font=("Segoe UI", 12), bg="#f0f2f5", fg="#2c3e50", selectcolor="#ecf0f1",
-               activebackground="#f0f2f5").pack(side="left", padx=80)
+progress_bar = ttk.Progressbar(main, mode="determinate", maximum=100)
+progress_bar.grid(row=6, column=0, sticky="ew", pady=10)
 
-tk.Radiobutton(format_frame, text="MP4 (Vidéo)", variable=format_var, value="mp4",
-               font=("Segoe UI", 12), bg="#f0f2f5", fg="#2c3e50", selectcolor="#ecf0f1",
-               activebackground="#f0f2f5").pack(side="right", padx=80)
+status_label = tk.Label(
+    main,
+    text="Prêt",
+    font=("Segoe UI", 13),
+    bg="#f0f2f5",
+    fg="#7f8c8d"
+)
+status_label.grid(row=7, column=0, pady=10)
 
-# Bouton Télécharger
-download_btn = tk.Button(main_frame, text="TÉLÉCHARGER", bg="#27ae60", fg="white",
-                         font=("Segoe UI", 15, "bold"), relief="flat", cursor="hand2",
-                         activebackground="#2ecc71", activeforeground="white",
-                         padx=40, pady=12)
-download_btn.grid(row=5, column=0, pady=20)
+# =========================
+# DOWNLOAD LOGIC
+# =========================
+def download_mp3():
+    url = url_entry.get("1.0", "end").strip()
 
-# Progression
-percent_label = tk.Label(main_frame, text="0%", font=("Segoe UI", 18, "bold"),
-                         bg="#f0f2f5", fg="#2c3e50")
-percent_label.grid(row=6, column=0, pady=(10,5))
-
-progress_bar = ttk.Progressbar(main_frame, length=760, mode="determinate", maximum=100)
-progress_bar.grid(row=7, column=0, sticky="ew", pady=8)
-
-status_label = tk.Label(main_frame, text="Prêt", font=("Segoe UI", 13), bg="#f0f2f5", fg="#7f8c8d")
-status_label.grid(row=8, column=0, pady=(5,10))
-
-# Fonction principale de téléchargement
-def download_video():
-    url = url_entry.get("1.0", "end-1c").strip()
-    if not url or ("youtube.com" not in url.lower() and "youtu.be" not in url.lower()):
-        messagebox.showerror("Erreur", "Veuillez entrer une URL YouTube valide.")
+    if not url or ("youtube.com" not in url and "youtu.be" not in url):
+        messagebox.showerror("Erreur", "URL YouTube invalide.")
         return
 
     folder = filedialog.askdirectory(title="Choisir le dossier de destination")
     if not folder:
         return
 
-    is_mp3 = format_var.get() == "mp3"
+    ytdlp = os.path.join(BASE_PATH, "yt-dlp.exe")
+    ffmpeg = os.path.join(BASE_PATH, "ffmpeg.exe")
 
-    # Reset interface
+    if not os.path.exists(ytdlp) or not os.path.exists(ffmpeg):
+        messagebox.showerror(
+            "Fichiers manquants",
+            "yt-dlp.exe ou ffmpeg.exe introuvable.\n\nPlace-les dans le même dossier que l'application."
+        )
+        return
+
     progress_bar["value"] = 0
     percent_label.config(text="0%")
-    status_label.config(text="Préparation...", fg="#3498db")
+    status_label.config(text="Analyse de l’URL…", fg="#3498db")
     download_btn.config(state="disabled")
 
-    def run_download():
-        ytdlp_path = os.path.join(BASE_PATH, "yt-dlp.exe")          # ou yt-dlp-nightly.exe
-        ffmpeg_path = os.path.join(BASE_PATH, "ffmpeg.exe")
-
-        if not os.path.isfile(ytdlp_path):
-            root.after(0, lambda: status_label.config(text="Erreur : yt-dlp introuvable", fg="red"))
-            root.after(0, lambda: download_btn.config(state="normal"))
-            return
-
+    def run():
         os.environ["PATH"] = BASE_PATH + os.pathsep + os.environ.get("PATH", "")
 
         cmd = [
-            ytdlp_path,
+            ytdlp,
             "--newline",
-            "--ffmpeg-location", ffmpeg_path,
-            "--no-warnings",
-            "-o", os.path.join(folder, "%(title)s.%(ext)s"),
-            "--embed-metadata",
+            "--ffmpeg-location", ffmpeg,
+            "-f", "bestaudio/best",
+            "-x",
+            "--audio-format", "mp3",
+            "--audio-quality", "0",
             "--embed-thumbnail",
-            "--no-playlist",           # sécurité contre les playlists
+            "--embed-metadata",
+            "--yes-playlist",
+            "--extractor-args", "youtube:player_client=auto",
+            "--js-runtimes", "deno",
+            "-o", os.path.join(
+                folder,
+                "%(title)s.%(ext)s"
+            ),
             url
         ]
 
-        if is_mp3:
-            cmd.extend([
-                "-x",
-                "--audio-format", "mp3",
-                "--audio-quality", "0",     # meilleure qualité (V0)
-            ])
-        else:
-            cmd.extend([
-                "-f", "bestvideo+bestaudio/best",
-                "--merge-output-format", "mp4",
-                "--embed-subs",
-                "--sub-langs", "all,-live_chat",
-            ])
+
+        logs = []
 
         try:
             process = subprocess.Popen(
@@ -169,47 +211,46 @@ def download_video():
             )
 
             for line in process.stdout:
+                logs.append(line)
                 line = line.strip()
-                if "[download]" in line and "%" in line:
-                    try:
-                        percent = float(line.split("%")[0].split()[-1])
-                        root.after(0, lambda p=percent: [
-                            progress_bar.config(value=p),
-                            percent_label.config(text=f"{p:.1f}%")
-                        ])
-                    except:
-                        pass
 
-                if any(kw in line.lower() for kw in ["error", "warning", "failed"]):
-                    root.after(0, lambda t=line[:120]: status_label.config(text=t, fg="#e74c3c"))
+                match = re.search(r'(\d+(?:\.\d+)?)%', line)
+                if match:
+                    v = float(match.group(1))
+                    root.after(0, lambda v=v: (
+                        progress_bar.config(value=v),
+                        percent_label.config(text=f"{v:.1f}%")
+                    ))
 
-                elif "Destination:" in line:
-                    root.after(0, lambda t=line[:120]: status_label.config(text="Téléchargement en cours..."))
+                if "Downloading" in line:
+                    root.after(0, lambda: status_label.config(text="Téléchargement…"))
+                elif "Extracting" in line or "Converting" in line:
+                    root.after(0, lambda: status_label.config(text="Conversion MP3…"))
+                elif "Embedding" in line:
+                    root.after(0, lambda: status_label.config(text="Ajout pochette…"))
 
             process.wait()
 
             if process.returncode == 0:
-                root.after(0, lambda: [
-                    status_label.config(text="Terminé avec succès ✓", fg="#27ae60"),
-                    percent_label.config(text="100%"),
+                root.after(0, lambda: (
                     progress_bar.config(value=100),
-                    messagebox.showinfo("Succès", "Téléchargement terminé !")
-                ])
+                    percent_label.config(text="100%"),
+                    status_label.config(text="Téléchargement terminé 🎧", fg="#27ae60")
+                ))
             else:
-                root.after(0, lambda: status_label.config(text="Échec du téléchargement", fg="#e74c3c"))
+                root.after(0, lambda: messagebox.showerror(
+                    "Erreur",
+                    "".join(logs[-25:])
+                ))
 
         except Exception as e:
-            root.after(0, lambda: status_label.config(text=f"Erreur : {str(e)[:80]}", fg="#e74c3c"))
-            messagebox.showerror("Erreur critique", str(e))
+            root.after(0, lambda: messagebox.showerror("Erreur critique", str(e)))
 
         finally:
             root.after(0, lambda: download_btn.config(state="normal"))
 
-    threading.Thread(target=run_download, daemon=True).start()
+    threading.Thread(target=run, daemon=True).start()
 
-# Connexion du bouton
-download_btn.config(command=download_video)
+download_btn.config(command=download_mp3)
 
-# Lancement de l'interface
-if __name__ == "__main__":
-    root.mainloop()
+root.mainloop()
