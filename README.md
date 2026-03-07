@@ -10,7 +10,7 @@ Nous sommes ravis d'annoncer la première version stable de **Youtube Downloader
 *   **Interface Épurée** : Design minimaliste (Thème Clair) pour une utilisation simple et rapide.
 
 ## 🚀 Comment l'utiliser ?
-1.  Téléchargez le fichier `Youtube Downloader.exe` en cliquant sur cette page : `https://github.com/Dannyydev/Youtube-Downloader/releases`.
+1.  Téléchargez le fichier `Youtube Downloader.exe` en cliquant sur cette page : https://github.com/Dannyydev/Youtube-Downloader/releases.
 2.  Lancez l'application.
 3.  Collez un lien YouTube.
 4.  Cliquez sur **Download**.
