@@ -1,0 +1,9 @@
+*.exe
+build/
+bin/
+dist/
+Compil.ps1
+cookies.txt
+node_modules/
+package-lock.json
+package.json
