@@ -96,7 +96,8 @@ ipcMain.handle('get-video-info', async (event, url) => {
           resolve({
             isPlaylist: true,
             title: data.title,
-            thumbnail: data.thumbnail, // La miniature de la playlist
+            // On sécurise la miniature : si 'thumbnail' est vide, on prend la dernière de la liste 'thumbnails' (souvent la HQ)
+            thumbnail: data.thumbnail || (data.thumbnails && data.thumbnails.length ? data.thumbnails[data.thumbnails.length - 1].url : null),
             uploader: data.uploader || data.channel || 'Inconnu',
             count: data.entries ? data.entries.length : 0
           });

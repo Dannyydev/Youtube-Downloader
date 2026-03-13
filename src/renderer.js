@@ -60,7 +60,8 @@ urlInput.addEventListener('input', () => {
                 
                 previewTitle.textContent = info.title;
                 if (info.isPlaylist) {
-                    previewMeta.textContent = `${info.uploader} • ${info.count} titres`;
+                    // Pour les playlists : juste le nombre de titres, propre et simple.
+                    previewMeta.textContent = `${info.count} titres`;
                 } else {
                     previewMeta.textContent = `${info.uploader} • ${info.duration}`;
                 }
