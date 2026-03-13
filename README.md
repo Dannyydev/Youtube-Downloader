@@ -2,6 +2,13 @@
 
 Une application simple pour télécharger vos vidéos 🎬 et playlists 📜 YouTube en format MP3.
 
+### 📦 Quoi de neuf dans la v1.2.1 ?
+
+*   **Prévisualisation instantanée** : Affiche la miniature et le titre dès que vous collez un lien.
+*   **Support des Playlists** : Affiche désormais le nombre de vidéos contenues dans la playlist.
+*   **Bouton "Coller"** : Un nouveau bouton pour coller rapidement votre lien.
+*   **Mises à jour automatiques** : L'application détectera et installera les futures mises à jour toute seule.
+
 ## ✨ Fonctionnalités
 
 *   🎨 Interface graphique simple et claire.
