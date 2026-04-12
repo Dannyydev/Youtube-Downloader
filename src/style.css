@@ -3,62 +3,62 @@
   box-sizing: border-box;
 }
 
-body{
-  margin:0;
-  height:100vh;
+body {
+  margin: 0;
+  height: 100vh;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  background:#f8f9fa;
-  color:#2c2c2e;
+  background: #f8f9fa;
+  color: #2c2c2e;
 
   overflow: hidden;
-  display:grid;
-  place-items:center;
+  display: grid;
+  place-items: center;
 }
 
 /* fond léger pour voir l'effet verre */
-body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  background:linear-gradient(135deg,#f0f2f5,#e8eaee);
-  z-index:-1;
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, #f0f2f5, #e8eaee);
+  z-index: -1;
 }
 
 
 /* bloc principal */
-.container{
+.container {
 
   /* S'adapte à la fenêtre : soit 580px, soit la largeur totale moins 40px (20px de marge de chaque côté) */
   width: min(580px, calc(100% - 40px));
 
   margin-top: 0;
 
-  padding:50px 40px;
+  padding: 50px 40px;
 
-  background:rgba(255,255,255,0.45);
+  background: rgba(255, 255, 255, 0.45);
 
-  border:1px solid rgba(200,200,210,0.35);
+  border: 1px solid rgba(200, 200, 210, 0.35);
 
-  border-radius:20px;
+  border-radius: 20px;
 
-  backdrop-filter:blur(28px);
+  backdrop-filter: blur(28px);
 
-  box-shadow:0 6px 24px rgba(0,0,0,0.08);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
 
-  text-align:center;
+  text-align: center;
 }
 
 
 /* titre */
 
-h1{
-  margin:0;
-  font-size:2.4rem;
+h1 {
+  margin: 0;
+  font-size: 2.4rem;
 }
 
-.subtitle{
-  margin:10px 0 35px;
-  color:#8a8a8f;
+.subtitle {
+  margin: 10px 0 35px;
+  color: #8a8a8f;
 }
 
 
@@ -67,27 +67,27 @@ h1{
 .input-group {
   display: flex;
   align-items: center;
-  width:95%;
-  margin:0 auto;
+  width: 95%;
+  margin: 0 auto;
   padding: 8px 15px;
-  border-radius:14px;
-  border:1px solid rgba(200,200,210,0.35);
-  background:rgba(255,255,255,0.7);
+  border-radius: 14px;
+  border: 1px solid rgba(200, 200, 210, 0.35);
+  background: rgba(255, 255, 255, 0.7);
   transition: 0.2s;
 }
 
 .input-group:focus-within {
-  border-color:#a0b0c0;
-  background:white;
+  border-color: #a0b0c0;
+  background: white;
 }
 
-#urlInput{
+#urlInput {
   flex: 1;
   border: none;
   background: transparent;
   padding: 10px 0;
-  font-size:1rem;
-  outline:none;
+  font-size: 1rem;
+  outline: none;
   min-width: 0;
 }
 
@@ -106,7 +106,7 @@ h1{
 }
 
 #pasteBtn:hover {
-  background: rgba(0,0,0,0.05);
+  background: rgba(0, 0, 0, 0.05);
   color: #1281ff;
 }
 
@@ -149,94 +149,101 @@ h1{
 
 /* bouton */
 
-#downloadBtn{
+#downloadBtn {
 
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap: 10px; /* Espace entre l'icône et le texte */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  /* Espace entre l'icône et le texte */
 
-  margin:20px auto;
+  margin: 20px auto;
 
-  padding:14px 32px;
+  padding: 14px 32px;
 
-  border:none;
-  border-radius:999px;
+  border: none;
+  border-radius: 999px;
 
-  background:#1281ff; /* Changé en gris foncé */
-  color:white;
+  background: #1281ff;
+  /* Changé en gris foncé */
+  color: white;
 
-  font-size:1rem;
-  font-family:-apple-system, system-ui, "Segoe UI", Roboto, sans-serif;
+  font-size: 1rem;
+  font-family: -apple-system, system-ui, "Segoe UI", Roboto, sans-serif;
 
-  cursor:pointer;
-  transition:0.2s;
+  cursor: pointer;
+  transition: 0.2s;
 
 }
 
-#downloadBtn:hover{
+#downloadBtn:hover {
 
-  background:#0099ff; /* Gris un peu plus clair au survol */
+  background: #0099ff;
+  /* Gris un peu plus clair au survol */
 
-  transform:translateY(-2px);
+  transform: translateY(-2px);
 
 }
 
 /* Style pour le bouton pendant le chargement */
 #downloadBtn.loading {
-  background: #5c6ac4; /* Une couleur un peu différente pour l'état de chargement */
+  background: #5c6ac4;
+  /* Une couleur un peu différente pour l'état de chargement */
   cursor: wait;
 }
 
-#downloadBtn.loading > svg {
-  display: none; /* On cache l'icône de téléchargement */
+#downloadBtn.loading>svg {
+  display: none;
+  /* On cache l'icône de téléchargement */
 }
 
-#downloadBtn.loading > span {
-  margin-left: 0; /* On recentre le texte quand l'icône est cachée */
+#downloadBtn.loading>span {
+  margin-left: 0;
+  /* On recentre le texte quand l'icône est cachée */
 }
 
 /* barre de progression */
 
-.progress-container{
+.progress-container {
 
-  margin:25px 0;
+  margin: 25px 0;
 
-  height:8px;
+  height: 8px;
 
-  background:rgba(200,200,210,0.25);
+  background: rgba(200, 200, 210, 0.25);
 
-  border-radius:5px;
+  border-radius: 5px;
 
-  overflow:hidden;
+  overflow: hidden;
 
 }
 
-#progressBar{
+#progressBar {
 
-  width:0;
+  width: 0;
 
-  height:100%;
+  height: 100%;
 
-  background:#2828ff; /* Harmonisé avec le bouton */
+  background: #2828ff;
+  /* Harmonisé avec le bouton */
 
-  transition:width 0.3s;
+  transition: width 0.3s;
 
 }
 
 
 /* texte status */
 
-#statusLabel{
+#statusLabel {
 
-  color:#8a8a8f;
+  color: #8a8a8f;
 
 }
 
-#statusLabel.error{
-  color:#c94a4a;
+#statusLabel.error {
+  color: #c94a4a;
 }
 
-#statusLabel.success{
-  color:#6aa06a;
+#statusLabel.success {
+  color: #6aa06a;
 }
