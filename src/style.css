@@ -1,18 +1,31 @@
 /* couleurs principales */
 * {
   box-sizing: border-box;
+  font-family: 'Outfit', sans-serif;
+}
+
+html {
+  /* La taille de base est définie ici : 4% de la plus petite dimension de la fenêtre */
+  font-size: clamp(10px, 4vmin, 18px);
 }
 
 body {
   margin: 0;
   height: 100vh;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   background: #f8f9fa;
   color: #2c2c2e;
 
-  overflow: hidden;
-  display: grid;
-  place-items: center;
+  /* Permet le défilement vertical si le contenu dépasse la hauteur disponible */
+  overflow-y: auto;
+  /* Utilise flexbox pour un centrage plus fiable avec le padding */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Centrage horizontal */
+  justify-content: center;
+  /* Centrage vertical */
+  padding: 1.5em;
+  /* Définit l'espace minimal entre le contenu et les bords de la fenêtre */
 }
 
 /* fond léger pour voir l'effet verre */
@@ -28,24 +41,26 @@ body::before {
 /* bloc principal */
 .container {
 
-  /* S'adapte à la fenêtre : soit 580px, soit la largeur totale moins 40px (20px de marge de chaque côté) */
-  width: min(580px, calc(100% - 40px));
+  width: 100%;
+  max-width: 32em;
+  /* Utiliser em ici est le secret : le container suit la taille du texte */
 
-  margin-top: 0;
-
-  padding: 50px 40px;
+  padding: 3.125em 2.5em;
+  /* Converti de 50px 40px */
 
   background: rgba(255, 255, 255, 0.45);
 
   border: 1px solid rgba(200, 200, 210, 0.35);
 
-  border-radius: 20px;
+  border-radius: 1.25em;
+  /* Converti de 20px */
 
   backdrop-filter: blur(28px);
 
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
 
   text-align: center;
+  position: relative;
 }
 
 
@@ -53,11 +68,11 @@ body::before {
 
 h1 {
   margin: 0;
-  font-size: 2.4rem;
+  font-size: 2.4em;
 }
 
 .subtitle {
-  margin: 10px 0 35px;
+  margin: 0.5em 0 2em;
   color: #8a8a8f;
 }
 
@@ -68,9 +83,12 @@ h1 {
   display: flex;
   align-items: center;
   width: 95%;
-  margin: 0 auto;
-  padding: 8px 15px;
-  border-radius: 14px;
+  margin: 2.5em auto;
+  /* Converti de 40px */
+  padding: 0.5em 1em;
+  /* Converti de 8px 15px */
+  border-radius: 0.875em;
+  /* Converti de 14px */
   border: 1px solid rgba(200, 200, 210, 0.35);
   background: rgba(255, 255, 255, 0.7);
   transition: 0.2s;
@@ -85,7 +103,8 @@ h1 {
   flex: 1;
   border: none;
   background: transparent;
-  padding: 10px 0;
+  padding: 0.6em 0;
+  /* Converti de 10px 0 */
   font-size: 1rem;
   outline: none;
   min-width: 0;
@@ -97,12 +116,20 @@ h1 {
   border: none;
   cursor: pointer;
   color: #8a8a8f;
-  padding: 8px;
+  padding: 0.5em;
+  /* Converti de 8px */
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
+  border-radius: 0.5em;
   transition: 0.2s;
+}
+
+#pasteBtn svg {
+  width: 1.25em;
+  /* Converti de 20px */
+  height: 1.25em;
+  /* Converti de 20px */
 }
 
 #pasteBtn:hover {
@@ -113,28 +140,35 @@ h1 {
 /* Carte de prévisualisation */
 .preview-card {
   width: 90%;
-  margin: 20px auto 0;
-  padding: 12px;
+  margin: 1.25em auto 0;
+  /* Converti de 20px */
+  padding: 0.75em;
+  /* Converti de 12px */
   background: rgba(255, 255, 255, 0.6);
-  border-radius: 16px;
+  border-radius: 1em;
+  /* Converti de 16px */
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 1em;
+  /* Converti de 15px */
   text-align: left;
 }
 
 .preview-thumb {
-  width: 80px;
-  height: 60px;
+  width: 5em;
+  /* Converti de 80px */
+  height: 3.75em;
+  /* Converti de 60px */
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 0.5em;
+  /* Converti de 8px */
   background-color: #ddd;
 }
 
 .preview-title {
-  font-size: 0.95rem;
+  font-size: 0.95em;
   font-weight: 600;
-  margin: 0 0 4px 0;
+  margin: 0 0 0.25em 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -142,9 +176,80 @@ h1 {
 }
 
 .preview-meta {
-  font-size: 0.8rem;
+  font-size: 0.8em;
   color: #8a8a8f;
   margin: 0;
+}
+
+/* Menu Sandwich & Options */
+.menu-wrapper {
+  position: absolute;
+  top: 1.25em;
+  /* Converti de 20px */
+  right: 1.25em;
+  /* Converti de 20px */
+  z-index: 100;
+}
+
+#menuBtn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #8a8a8f;
+  padding: 0.5em;
+  /* Converti de 8px */
+  border-radius: 0.5em;
+  transition: 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#menuBtn:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #1281ff;
+}
+
+#menuBtn svg {
+  width: 1.5em;
+  /* Converti de 24px */
+  height: 1.5em;
+  /* Converti de 24px */
+}
+
+.options-menu {
+  display: none;
+  position: absolute;
+  top: 2.8em;
+  /* Converti de 45px */
+  right: 0;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(200, 200, 210, 0.4);
+  border-radius: 0.875em;
+  /* Converti de 14px */
+  padding: 1em;
+  /* Converti de 15px */
+  min-width: 8.75em;
+  /* Converti de 140px */
+  flex-direction: column;
+  gap: 0.75em;
+  /* Converti de 12px */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+.options-menu.show {
+  display: flex;
+}
+
+.options-menu label {
+  font-size: 0.85em;
+  color: #4a4a4a;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
 }
 
 /* bouton */
@@ -154,12 +259,14 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 0.6em;
   /* Espace entre l'icône et le texte */
 
-  margin: 20px auto;
+  margin: 1.25em auto;
+  /* Converti de 20px */
 
-  padding: 14px 32px;
+  padding: 0.875em 2em;
+  /* Converti de 14px 32px */
 
   border: none;
   border-radius: 999px;
@@ -168,12 +275,18 @@ h1 {
   /* Changé en gris foncé */
   color: white;
 
-  font-size: 1rem;
-  font-family: -apple-system, system-ui, "Segoe UI", Roboto, sans-serif;
+  font-size: 1em;
 
   cursor: pointer;
   transition: 0.2s;
 
+}
+
+#downloadBtn svg {
+  width: 1.5em;
+  /* Converti de 24px */
+  height: 1.5em;
+  /* Converti de 24px */
 }
 
 #downloadBtn:hover {
@@ -206,13 +319,15 @@ h1 {
 
 .progress-container {
 
-  margin: 25px 0;
+  margin: 1.5em 0;
+  /* Converti de 25px */
 
-  height: 8px;
+  height: 0.5em;
+  /* Converti de 8px */
 
   background: rgba(200, 200, 210, 0.25);
 
-  border-radius: 5px;
+  border-radius: 0.3em;
 
   overflow: hidden;
 
@@ -246,4 +361,17 @@ h1 {
 
 #statusLabel.success {
   color: #6aa06a;
+}
+
+#versionLabel {
+  font-size: 0.75em;
+  color: #b0b0b5;
+  margin-top: 0.5em;
+  /* Converti de 8px */
+}
+
+.copyright {
+  font-size: 0.65em;
+  color: #b0b0b5;
+  margin-top: 0.2em;
 }

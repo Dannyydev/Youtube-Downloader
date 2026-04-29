@@ -7,6 +7,15 @@ const previewCard = document.getElementById('previewCard');
 const previewThumb = document.getElementById('previewThumb');
 const previewTitle = document.getElementById('previewTitle');
 const previewMeta = document.getElementById('previewMeta');
+const menuBtn = document.getElementById('menuBtn');
+const optionsMenu = document.getElementById('optionsMenu');
+const versionLabel = document.getElementById('versionLabel');
+
+// Liste des IDs des cases à cocher pour faciliter la gestion
+const metadataCheckboxes = [
+    'checkTitle', 'checkArtist', 'checkAlbum',
+    'checkDate', 'checkTrack', 'checkThumb'
+];
 
 let debounceTimer; // Timer pour éviter trop de requêtes
 // Regex unifiée pour éviter les duplications et incohérences
@@ -15,11 +24,53 @@ const YOUTUBE_REGEX = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?
 
 // Au chargement de la page
 document.addEventListener('DOMContentLoaded', async () => {
+    // 1. Charger les réglages sauvegardés
+    loadSettings();
+
     try {
         const version = await window.api.getAppVersion();
         // On met à jour le titre qui contient la version dans le README
         document.querySelector('h1').title = `v${version}`;
+        if (versionLabel) versionLabel.textContent = `v${version}`;
     } catch (e) { console.error("Failed to get app version", e); }
+});
+
+// --- Gestion du Menu Sandwich ---
+menuBtn.addEventListener('click', (e) => {
+    e.stopPropagation(); // Empêche la fermeture immédiate via le clic document
+    optionsMenu.classList.toggle('show');
+});
+
+// Fermer le menu si on clique ailleurs
+document.addEventListener('click', (e) => {
+    if (!optionsMenu.contains(e.target) && e.target !== menuBtn) {
+        optionsMenu.classList.remove('show');
+    }
+});
+
+// --- Gestion de la Persistance (localStorage) ---
+function loadSettings() {
+    metadataCheckboxes.forEach(id => {
+        const saved = localStorage.getItem(id);
+        const el = document.getElementById(id);
+        if (saved !== null && el) {
+            el.checked = saved === 'true';
+        }
+    });
+}
+
+function saveSettings() {
+    metadataCheckboxes.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            localStorage.setItem(id, el.checked);
+        }
+    });
+}
+
+// Ajouter l'écouteur de sauvegarde sur chaque checkbox
+metadataCheckboxes.forEach(id => {
+    document.getElementById(id)?.addEventListener('change', saveSettings);
 });
 
 function updateStatus(text, type) {
@@ -45,7 +96,7 @@ pasteBtn.addEventListener('click', async () => {
 // Détection de la frappe pour la prévisualisation (Debounce)
 urlInput.addEventListener('input', () => {
     const url = urlInput.value.trim();
-    
+
     // On nettoie l'ancien timer si l'utilisateur continue d'écrire
     clearTimeout(debounceTimer);
 
@@ -67,7 +118,7 @@ urlInput.addEventListener('input', () => {
 
             try {
                 const info = await window.api.getVideoInfo(url);
-                
+
                 previewTitle.textContent = info.title;
                 if (info.isPlaylist) {
                     // Pour les playlists : juste le nombre de titres, propre et simple.
@@ -80,7 +131,7 @@ urlInput.addEventListener('input', () => {
                 }
                 previewThumb.src = info.thumbnail;
                 previewThumb.style.opacity = "1";
-                
+
             } catch (err) {
                 // Si erreur (ex: vidéo privée ou URL invalide), on affiche un message
                 previewTitle.textContent = "Vidéo non trouvée";
@@ -93,7 +144,7 @@ urlInput.addEventListener('input', () => {
 
 downloadBtn.addEventListener('click', async () => {
     const url = urlInput.value.trim();
-    
+
     if (!url || !YOUTUBE_REGEX.test(url)) {
         updateStatus("URL invalide.", 'error');
         return;
@@ -106,7 +157,18 @@ downloadBtn.addEventListener('click', async () => {
     downloadBtn.classList.add('loading');
     downloadBtn.querySelector('span').textContent = 'Téléchargement...';
     progressBar.style.width = '0%';
-    window.api.startDownload({ url, folder });
+
+    // Récupération des options de métadonnées
+    const options = {
+        title: document.getElementById('checkTitle')?.checked ?? true,
+        artist: document.getElementById('checkArtist')?.checked ?? true,
+        album: document.getElementById('checkAlbum')?.checked ?? true,
+        date: document.getElementById('checkDate')?.checked ?? true,
+        track: document.getElementById('checkTrack')?.checked ?? true,
+        thumbnail: document.getElementById('checkThumb')?.checked ?? true
+    };
+
+    window.api.startDownload({ url, folder, options });
 });
 
 window.api.onStatus((text, color) => {

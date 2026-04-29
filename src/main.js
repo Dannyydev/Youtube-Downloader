@@ -10,8 +10,8 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 960,
     height: 700,
-    minWidth: 520,
-    minHeight: 420,
+    minWidth: 320, // Conserve la largeur minimale actuelle
+    minHeight: 380, // Augmente la hauteur minimale pour accommoder le contenu et le padding
     backgroundColor: '#f8f9fa',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -182,9 +182,9 @@ ipcMain.handle('get-video-info', async (event, url) => {
   });
 });
 
-ipcMain.on('start-download', (event, { url, folder }) => {
+ipcMain.on('start-download', (event, { url, folder, options }) => {
   if (!mainWindow || mainWindow.isDestroyed()) return;
-  const handler = new DownloadHandler(url, folder, mainWindow);
+  const handler = new DownloadHandler(url, folder, mainWindow, options);
   handler.start();
 });
 

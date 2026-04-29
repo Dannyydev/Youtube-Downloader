@@ -1,78 +1,87 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>Youtube Downloader</title>
-    <!-- On lie notre nouveau fichier de style -->
-    <link rel="stylesheet" href="style.css" />
-    <!-- On importe une police plus moderne depuis Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <div class="container">
-      <div class="header">
-        <!-- Vous pouvez remplacer `icon.png` par le chemin vers votre logo -->
-        <h1>Youtube Downloader</h1>
-      </div>
-      <p class="subtitle">
-        Conversion vers MP3 en Haute Qualité (320 kbps)
-      </p>
 
-      <div class="input-group">
-        <input
-          type="text"
-          id="urlInput"
-          placeholder="Collez votre lien YouTube ici..."
-        />
-        <button id="pasteBtn" title="Coller depuis le presse-papier">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
-          </svg>
-        </button>
-      </div>
+<head>
+  <meta charset="UTF-8" />
+  <title>Youtube Downloader</title>
+  <!-- On lie notre nouveau fichier de style -->
+  <link rel="stylesheet" href="style.css" />
+  <!-- On importe une police plus moderne depuis Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+</head>
 
-      <!-- Structure de prévisualisation (cachée par défaut) -->
-      <div id="previewCard" class="preview-card" style="display: none;">
-        <img id="previewThumb" class="preview-thumb" src="" alt="Miniature" />
-        <div class="preview-info">
-          <h3 id="previewTitle" class="preview-title">Recherche des infos...</h3>
-          <p id="previewMeta" class="preview-meta">--:-- • Chaine</p>
-        </div>
-      </div>
-
-      <button id="downloadBtn">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-          <polyline points="7 10 12 15 17 10"></polyline>
-          <line x1="12" y1="15" x2="12" y2="3"></line>
+<body>
+  <div class="container">
+    <!-- Menu Sandwich -->
+    <div class="menu-wrapper">
+      <button id="menuBtn" title="Options de métadonnées">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
         </svg>
-        <span>Télécharger</span>
       </button>
-
-      <div class="status-container">
-        <div class="progress-container">
-          <div id="progressBar"></div>
-        </div>
-        <p id="statusLabel">Prêt à télécharger</p>
+      <div id="optionsMenu" class="options-menu">
+        <label><input type="checkbox" id="checkTitle" checked /> Titre</label>
+        <label><input type="checkbox" id="checkArtist" checked /> Artiste</label>
+        <label><input type="checkbox" id="checkAlbum" checked /> Album</label>
+        <label><input type="checkbox" id="checkDate" checked /> Année</label>
+        <label><input type="checkbox" id="checkTrack" checked /> N° Piste</label>
+        <label><input type="checkbox" id="checkThumb" checked /> Pochette</label>
       </div>
     </div>
 
-    <script src="./renderer.js"></script>
-  </body>
+
+    <div class="header">
+      <!-- Vous pouvez remplacer `icon.png` par le chemin vers votre logo -->
+      <h1>Youtube Downloader</h1>
+    </div>
+
+    <div class="input-group">
+      <input type="text" id="urlInput" placeholder="Collez votre lien YouTube ici..." />
+      <button id="pasteBtn" title="Coller depuis le presse-papier">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+          <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Structure de prévisualisation (cachée par défaut) -->
+    <div id="previewCard" class="preview-card" style="display: none;">
+      <img id="previewThumb" class="preview-thumb" src="" alt="Miniature" />
+      <div class="preview-info">
+        <h3 id="previewTitle" class="preview-title">Recherche des infos...</h3>
+        <p id="previewMeta" class="preview-meta">--:-- • Chaine</p>
+      </div>
+    </div>
+
+
+    <button id="downloadBtn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+        <polyline points="7 10 12 15 17 10"></polyline>
+        <line x1="12" y1="15" x2="12" y2="3"></line>
+      </svg>
+      <span>Télécharger</span>
+    </button>
+
+    <div class="status-container">
+      <div class="progress-container">
+        <div id="progressBar"></div>
+      </div>
+      <p id="statusLabel">Prêt à télécharger</p>
+      <p id="versionLabel"></p>
+      <p class="copyright">&copy; 2026 Dan&Tom</p>
+    </div>
+  </div>
+
+  <script src="./renderer.js"></script>
+</body>
+
 </html>

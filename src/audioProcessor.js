@@ -39,7 +39,11 @@ async function processAudioChannels(inputPath, outputPath, metadata = {}, binPat
 
         // Ajout des métadonnées ID3
         if (metadata.title) ffmpegArgs.push('-metadata', `title=${metadata.title}`);
-        if (metadata.artist) ffmpegArgs.push('-metadata', `artist=${metadata.artist}`);
+        if (metadata.artist) {
+            ffmpegArgs.push('-metadata', `artist=${metadata.artist}`);
+            // On force la suppression des champs "Interprète" / "Artiste de l'album"
+            ffmpegArgs.push('-metadata', 'album_artist=', '-metadata', 'performer=');
+        }
         if (metadata.date) ffmpegArgs.push('-metadata', `date=${metadata.date}`);
         if (metadata.album) ffmpegArgs.push('-metadata', `album=${metadata.album}`);
         if (metadata.track) ffmpegArgs.push('-metadata', `track=${metadata.track}`);

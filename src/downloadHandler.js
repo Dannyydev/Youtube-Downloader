@@ -6,11 +6,12 @@ const { processAudioChannels } = require('./audioProcessor'); // Importez le nou
 
 class DownloadHandler {
 
-  constructor(url, folder, window) {
+  constructor(url, folder, window, options = {}) {
 
     this.url = url;
     this.folder = folder;
     this.window = window;
+    this.options = options;
 
     const resourcePath = app.isPackaged
       ? path.join(process.resourcesPath, 'bin')
@@ -77,7 +78,7 @@ class DownloadHandler {
 
           const index = currentIndex + idx;
 
-          return this.processItem(index, isPlaylist)
+          return this.processItem(index, isPlaylist, entry, data.title)
             .then(() => {
 
               completed++;
@@ -121,17 +122,22 @@ class DownloadHandler {
 
   }
 
-  async processItem(index, isPlaylist) {
+  async processItem(index, isPlaylist, entry, playlistTitle) {
     const rawAudioTemplate = path.join(
       this.folder,
       `${String(index).padStart(3, '0')}_%(title)s.%(ext)s`
     );
 
+    // On utilise l'URL directe de la vidéo (via son ID) pour isoler les métadonnées
+    const videoUrl = (isPlaylist && entry && entry.id)
+      ? `https://www.youtube.com/watch?v=${entry.id}`
+      : this.url;
+
     const prefix = `${String(index).padStart(3, '0')}_`;
     let finalDest = "";
 
     const ytDlpArgs = [
-      this.url,
+      videoUrl,
       '--ffmpeg-location', this.ffmpegPath,
       '-f', 'bestaudio/best',
       '-x',
@@ -143,23 +149,18 @@ class DownloadHandler {
       '-o', rawAudioTemplate
     ];
 
-    if (isPlaylist) {
-      ytDlpArgs.push('--playlist-items', String(index));
-      ytDlpArgs.push('--parse-metadata', 'playlist_index:%(track_number)s');
-    }
-
     try {
       // 1. Téléchargement
       await this.runCommand(this.ytDlpPath, ytDlpArgs);
 
       const files = await fs.readdir(this.folder);
 
-      // Identification précise des fichiers (on exclut les images du raw audio)
+      // Identification précise du fichier audio brut (on exclut les métadonnées JSON et les images)
       const rawAudioFile = files.find(f => f.startsWith(prefix) && !f.endsWith('.mp3') && !f.endsWith('.json') && !['.jpg', '.webp', '.png'].some(ext => f.endsWith(ext)));
       const infoJsonFile = files.find(f => f.startsWith(prefix) && f.endsWith('.info.json'));
       const thumbFile = files.find(f => f.startsWith(prefix) && (f.endsWith('.jpg') || f.endsWith('.webp') || f.endsWith('.png')));
 
-      if (!rawAudioFile) throw new Error(`Fichier audio non trouvé pour ${this.url}`);
+      if (!rawAudioFile) throw new Error(`Fichier audio non trouvé pour ${videoUrl}`);
 
       // 1.1 Métadonnées
       let metadata = {};
@@ -167,15 +168,21 @@ class DownloadHandler {
         try {
           const content = await fs.readFile(path.join(this.folder, infoJsonFile), 'utf8');
           const info = JSON.parse(content);
-          metadata = {
-            title: info.title,
-            artist: info.uploader || info.artist || '',
-            date: info.upload_date ? info.upload_date.substring(0, 4) : ''
+          const fullMetadata = {
+            title: info.title || '',
+            artist: info.uploader || info.channel || info.webpage_url_domain || '',
+            date: info.upload_date ? info.upload_date.substring(0, 4) : '',
+            album: info.playlist_title || playlistTitle || '',
+            track: info.playlist_index || index
           };
-          if (isPlaylist) {
-            metadata.album = info.playlist_title || info.album || '';
-            metadata.track = info.playlist_index || index;
-          }
+
+          // Filtrage selon les options choisies par l'utilisateur
+          if (this.options.title) metadata.title = fullMetadata.title;
+          if (this.options.artist) metadata.artist = fullMetadata.artist;
+          if (this.options.date) metadata.date = fullMetadata.date;
+          if (this.options.album) metadata.album = fullMetadata.album;
+          if (this.options.track) metadata.track = fullMetadata.track;
+
         } catch (err) { console.error("Metadata error:", err); }
       }
 
@@ -190,7 +197,7 @@ class DownloadHandler {
       });
 
       // 3. Intégration Miniature (support JPG et WEBP)
-      if (thumbFile) {
+      if (thumbFile && this.options.thumbnail !== false) {
         const fullThumbPath = path.join(this.folder, thumbFile);
         const tempMp3Path = path.join(this.folder, `${mp3BaseName}_temp.mp3`);
 

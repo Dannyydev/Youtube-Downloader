@@ -1,28 +1,38 @@
-# 🎵 Youtube Downloader v1.2.8
+#  Youtube Downloader `v1.2.13`
 
-Une application simple pour télécharger vos musiques et playlists YouTube en format MP3.
+**Une expérience de téléchargement fluide, élégante et intelligente pour vos contenus YouTube.**
 
-## ✨ Fonctionnalités
+## ✨ Points Forts
 
-*   🎨 Interface graphique simple et claire.
-*   🎬 Téléchargement de vidéos uniques ou de playlists complètes.
-*   🎧 Conversion automatique en MP3 avec la meilleure qualité audio disponible.
-*   🎧 **Conservation des canaux audio** : Maintien des canaux mono/stéréo et downmix intelligent des sources multicanaux vers le stéréo pour l'MP3.
-*   🏷️ **Gestion complète des métadonnées** :
-    *   Titre, artiste, pochette, nom de l'album.
-    *   Numéro de piste et d'album pour les playlists.
-*   📦 **Application robuste** : Gestion d'erreurs améliorée et nettoyage des résidus de téléchargement.
+*   📱 **Interface Ultra-Responsive** : Le conteneur et tous les éléments (boutons, textes, icônes) s'adaptent dynamiquement à la taille de la fenêtre pour un confort d'utilisation optimal, même en petit format.
+*   🎼 **Qualité Audio Premium** : Conversion automatique en MP3 (VBR Q0) avec un traitement intelligent des canaux (Mono, Stéréo et Downmix spatialisé pour les sources multicanaux).
+*   📂 **Gestion des Playlists** : Téléchargez des titres individuels ou des albums complets en un seul clic avec numérotation automatique.
+*   🏷️ **Métadonnées Personnalisables** : Un menu dédié vous permet de choisir précisément quels tags appliquer (Titre, Artiste, Album, Année, N° de piste et Pochette).
+*   🚀 **Prévisualisation Instantanée** : Visualisez les informations de la vidéo ou la playlist dès que vous collez le lien.
+*   🔄 **Mises à jour Automatiques** : Système intégré pour garantir que vous disposez toujours des dernières versions de `Youtube Downloader`.
 
-## 🚀 Comment l'utiliser ?
+## 🛠️ Utilisation
 
-1.  📋 Copiez l'URL d'une vidéo ou d'une playlist YouTube.
-2.  📥 Collez l'URL dans l'application.
-3.  🖱️ Cliquez sur "Télécharger" et choisissez un dossier.
-4.  ✅ Les fichiers MP3 seront sauvegardés dans le dossier sélectionné.
+1.  **Copier** : Récupérez l'URL d'une vidéo ou d'une playlist sur YouTube.
+2.  **Coller** : Insérez le lien dans le champ de saisie (le bouton "presse-papier" peut le faire pour vous).
+3.  **Configurer** : Ajustez vos préférences de métadonnées via le menu sandwich si nécessaire.
+4.  **Télécharger** : Sélectionnez votre dossier de destination et laissez l'application s'occuper du reste.
 
-## 🛠️ Informations Techniques
+## 💻 Pile Technologique
 
-*   **Version** : 1.2.8
-*   **Langage** : JavaScript
-*   **Dépendances** : `yt-dlp`, `ffmpeg`, `ffprobe`, `electron`
-*   **Développeur** : Danny Berger
+*   **Framework** : Electron
+*   **Moteur de téléchargement** : `yt-dlp`
+*   **Traitement Audio** : `FFmpeg` & `ffprobe`
+*   **Interface** : HTML5, CSS3 (Variables modernes, Flexbox, Grid)
+
+---
+
+### 📋 Dernières mises à jour
+**v1.2.13**
+- Refonte totale de l'interface avec mise à l'échelle proportionnelle.
+- Adoption de la typographie **Outfit**.
+- Optimisation du moteur de prévisualisation via oEmbed.
+- Correction de la gestion des canaux audio pour les fichiers MP3.
+
+**Développeur** : Dannyydev 
+*© 2026 Dan&Tom - Tous droits réservés*
