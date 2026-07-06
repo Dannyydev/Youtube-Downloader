@@ -1,4 +1,4 @@
-# Audivex `v1.4.2`
+# Audivex `v1.4.3`
 
 Audivex est une application de bureau qui vous permet de télécharger et convertir vos vidéos YouTube en MP3 ou MP4, simplement et rapidement.
 
@@ -16,7 +16,6 @@ Audivex est une application de bureau qui vous permet de télécharger et conver
 ## Nouveautés de la `v1.4.3` publiée le `06/07/2026`
 
 - **Mise à jour** — Moteur de téléchargement mis à jour
-
 
 ---
 
