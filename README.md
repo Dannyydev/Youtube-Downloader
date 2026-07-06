@@ -13,15 +13,7 @@ Audivex est une application de bureau qui vous permet de télécharger et conver
 
 ---
 
-## Nouveautés de la `v1.4.2` publiée le `23/06/2026`
-
-- **Ajout** — Temps restant estimé pendant les téléchargements
-
-- **Ajout** — Progression globale pour les playlists
-
-- **Mise à jour** — Barre de progression plus fiable
-
-- **Mise à jour** — Meilleure gestion des sous-titres MP4
+## Nouveautés de la `v1.4.3` publiée le `06/07/2026`
 
 - **Mise à jour** — Moteur de téléchargement mis à jour
 
